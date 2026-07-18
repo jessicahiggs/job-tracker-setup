@@ -1,0 +1,63 @@
+# job-tracker-setup
+
+A Claude skill that builds a **live, self-updating job-application tracker** from your Gmail. Point it at your inbox and it scans for application confirmations, rejections (including deleted ones in Trash), interview invites, offers, referrals, and recruiter/HM correspondence, then publishes a live dashboard that stays current on a schedule you choose.
+
+Created by [Jessica Higgs](https://github.com/jessicahiggs). Generalized from a workflow originally built for one real job search, so it can bootstrap a fresh tracker for anyone's inbox.
+
+## What it does
+
+- **Seeds** from an existing spreadsheet/CSV (optional) or builds your pipeline from scratch by scanning inbox history.
+- **Classifies** each application into a small, ordered status set: `Applied → Warm → Interviewing → Offer`, with `Rejected` as a terminal state.
+  - `Warm` = the specific role didn't proceed, but a recruiter is keeping you warm / referring you elsewhere — a state that otherwise gets mislabeled.
+- **Maintains** the tracker on every run: adds new applications, moves statuses forward on real email evidence, and appends dated notes from recruiter threads — **without ever overwriting your existing notes**.
+- **Publishes** a searchable, filterable live dashboard (see `assets/tracker_template.html`) that you can reopen anytime.
+- **Optionally schedules** itself to re-sync automatically (e.g. nightly).
+
+## Requirements
+
+- A connected **Gmail** MCP connector (to search/read mail).
+- Cowork's **artifact** tool (`mcp__cowork__create_artifact` / `update_artifact`) to publish the live dashboard.
+- *Optional:* a Drive/Sheets connector (only to seed from an existing spreadsheet) and the `schedule` skill (only for automatic recurring runs).
+
+## Install
+
+Copy this folder into your Claude skills directory (or install it however your setup consumes skills), so the structure is:
+
+```
+job-tracker-setup/
+├── SKILL.md
+├── README.md
+├── references/
+│   ├── gmail_queries.md
+│   └── status_rules.md
+└── assets/
+    └── tracker_template.html
+```
+
+Then ask Claude something like *"build me a job application tracker from my Gmail"* and the skill takes over.
+
+## How it works (files)
+
+- **`SKILL.md`** — the entry point: prerequisite checks, the setup interview, and the build/schedule flow.
+- **`references/gmail_queries.md`** — the exact Gmail search patterns for each signal type (new application, rejection, interview, offer, sent-mail dialogue, referral) and the reasoning behind them.
+- **`references/status_rules.md`** — the status/notes rules that keep the tracker trustworthy across many runs (progression, "Warm is sticky," re-applications, row matching).
+- **`assets/tracker_template.html`** — the self-contained dashboard template with `{{LAST_SYNC}}`, `{{RECENT_CHANGES}}`, and `{{DATA}}` placeholders.
+
+## Design notes / hard-won lessons
+
+This skill has been stress-tested against a real, active job search. A few rules exist specifically because the naive version got them wrong:
+
+- **Never trust a single phrase to detect an application.** Confirmation wording varies enormously; the skill matches on a wide phrase list *and* a sender heuristic *and* a direct label sweep.
+- **Read every email's body for the exact role.** One email thread can contain confirmations for two *different* roles at the same company. Companies don't send duplicate confirmations, so two confirmations with different role text are two applications — never merge them.
+- **Convert Gmail's UTC timestamps to the user's local date** before deciding what counts as "today."
+- **A tracker only sees the one account it's connected to** — mail from a second address won't appear.
+
+## Limitations
+
+- **Single Gmail account** at a time.
+- **English-language emails** — the bundled search phrases are English; other languages need translated patterns.
+- **Validated end-to-end against one real inbox** — a very differently-shaped mailbox may surface untested edge cases.
+
+## License
+
+See repository. Contributions and issue reports welcome.
