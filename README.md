@@ -27,20 +27,57 @@ A live dashboard, updated automatically from your inbox — every application wi
 
 ## Install
 
-Copy this folder into your Claude skills directory (or install it however your setup consumes skills), so the structure is:
+This is a Claude skill. You install it once, then talk to Claude normally — you never open or read the files yourself. Claude reads them for you.
+
+### 1. Download the skill
+
+On this page: click the green **Code** button → **Download ZIP**, then unzip it.
+
+### 2. Zip the inner folder
+
+⚠️ **This is the step people get wrong.** The download gives you two nested folders with almost the same name:
 
 ```
-job-tracker-setup/
-├── SKILL.md
-├── README.md
-├── references/
-│   ├── gmail_queries.md
-│   └── status_rules.md
-└── assets/
-    └── tracker_template.html
+job-tracker-setup-main/        ← the repo. NOT this one.
+└── job-tracker-setup/         ← the skill. THIS one.
+    ├── SKILL.md
+    ├── references/
+    └── assets/
 ```
 
-Then ask Claude something like *"build me a job application tracker from my Gmail"* and the skill takes over.
+You want the **inner** `job-tracker-setup` folder — the one with `SKILL.md` sitting directly inside it. Right-click it → **Compress**.
+
+If you zip the outer folder by mistake, `SKILL.md` ends up one level too deep and the upload will be rejected.
+
+### 3. Upload it to Claude
+
+Go to [claude.ai](https://claude.ai) → **Settings** → **Capabilities** → **Skills** → upload your zip.
+
+### 4. Connect Gmail
+
+**Settings** → **Connectors** → add **Gmail**, and sign in with the address you apply to jobs from.
+
+The tracker only ever sees this one account. If you apply from a second address, those applications won't show up.
+
+### 5. Ask for your tracker
+
+Start a new chat and say:
+
+> build me a job application tracker from my Gmail
+
+Claude will ask you a few short questions — which account to scan, whether you have an existing spreadsheet to import, whether you use a Gmail label for job mail, and whether you want it to re-check automatically each night. Defaults are fine for all of them; answer "no" to anything you don't have.
+
+Then it scans your inbox and builds your dashboard.
+
+### Later
+
+To refresh it any time:
+
+> sync my job tracker
+
+---
+
+**Using Claude Code instead?** Drop the inner `job-tracker-setup` folder into `~/.claude/skills/` and the skill will load. Note that the live dashboard is published as a Claude artifact, so the final publishing step is designed for claude.ai.
 
 ## How it works (files)
 
