@@ -9,6 +9,8 @@ Created by [Jessica Higgs](https://github.com/jessicahiggs). Generalized from a 
 A live dashboard, updated automatically from your inbox — every application with its status, date, and notes, plus quick filters and search across companies and roles. *(Sample below uses illustrative data.)*
 
 <img width="743" height="605" alt="Job application tracker dashboard" src="https://github.com/user-attachments/assets/830a0704-ea39-4e03-b9ba-05fa354ec742" />
+<img width="2870" height="1590" alt="tracker screenshot" src="https://github.com/user-attachments/assets/49b0b6f2-2a63-45e2-ab75-03f11d489238" />
+
 
 ## What it does
 
